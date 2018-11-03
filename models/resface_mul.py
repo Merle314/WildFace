@@ -53,11 +53,21 @@ def resface_block(lower_input,output_channels,scope=None):
 # Define the convolution block before the resface layer
 def resface_pre(lower_input,output_channels,scope=None):
     net_1, net_2, net_3, net_4 = pixelShuffler(lower_input, scale=2)
-    net = slim.conv2d(net_1, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
-    net = slim.conv2d(net_2+net, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
-    net = slim.conv2d(net_3+net, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
-    net = slim.conv2d(net_4+net, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
-    return net
+    # net = slim.conv2d(net_1, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
+    # net = slim.conv2d(net_2+net, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
+    # net = slim.conv2d(net_3+net, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
+    # net = slim.conv2d(net_4+net, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
+    flatten = slim.flatten(lower_input)
+    alpha_1 = tf.expand_dims(tf.expand_dims(slim.fully_connected(flatten, 1, activation_fn=None, scope='alpha_1', reuse=False), -1), -1)
+    alpha_2 = tf.expand_dims(tf.expand_dims(slim.fully_connected(flatten, 1, activation_fn=None, scope='alpha_2', reuse=False), -1), -1)
+    alpha_3 = tf.expand_dims(tf.expand_dims(slim.fully_connected(flatten, 1, activation_fn=None, scope='alpha_3', reuse=False), -1), -1)
+    alpha_4 = tf.expand_dims(tf.expand_dims(slim.fully_connected(flatten, 1, activation_fn=None, scope='alpha_4', reuse=False), -1), -1)
+    net_1 = slim.conv2d(net_1, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
+    net_2 = slim.conv2d(net_2, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
+    net_3 = slim.conv2d(net_3, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
+    net_4 = slim.conv2d(net_4, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
+    # return net_1*alpha_1+net_2*alpha_2+net_3*alpha_3+net_4*alpha_4
+    return net_1+net_2+net_3+net_4
 
 # # Define the convolution block before the resface layer
 # def resface_pre(lower_input,output_channels,scope=None):
@@ -74,16 +84,16 @@ def resface20(images, keep_probability,
     end_points = {}
     with tf.variable_scope('Conv1'):
         print('input:', images.get_shape().as_list())
-        net = slim.conv2d(images, 64, scope='input_pre')
-        print('input_pre:', net.get_shape().as_list())
-        net = resface_pre(net,64,scope='Conv1_pre')
+        # net = slim.conv2d(images, 64, scope='input_pre')
+        # print('input_pre:', net.get_shape().as_list())
+        net = resface_pre(images,64,scope='Conv1_pre')
         end_points['Conv1_pre'] = net
         print('Conv1_pre:', net.get_shape().as_list())
         net = slim.repeat(net,1,resface_block,64,scope='Conv1')
         end_points['Conv1'] = net
         print('Conv1:', net.get_shape().as_list())
     with tf.variable_scope('Conv2'):
-        net = slim.conv2d(net, 128, scope='input_pre')
+        # net = slim.conv2d(net, 128, scope='input_pre')
         net = resface_pre(net,128,scope='Conv2_pre')
         end_points['Conv2_pre'] = net
         print('Conv2_pre:', net.get_shape().as_list())
@@ -91,7 +101,7 @@ def resface20(images, keep_probability,
         end_points['Conv2'] = net
         print('Conv2:', net.get_shape().as_list())
     with tf.variable_scope('Conv3'):
-        net = slim.conv2d(net, 256, scope='input_pre')
+        # net = slim.conv2d(net, 256, scope='input_pre')
         net = resface_pre(net,256,scope='Conv3_pre')
         end_points['Conv3_pre'] = net
         print('Conv3_pre:', net.get_shape().as_list())
@@ -99,7 +109,7 @@ def resface20(images, keep_probability,
         end_points['Conv3'] = net
         print('Conv3:', net.get_shape().as_list())
     with tf.variable_scope('Conv4'):
-        net = slim.conv2d(net, 512, scope='input_pre')
+        # net = slim.conv2d(net, 512, scope='input_pre')
         net = resface_pre(net,512,scope='Conv4_pre')
         end_points['Conv4_pre'] = net
         print('Conv4_pre:', net.get_shape().as_list())

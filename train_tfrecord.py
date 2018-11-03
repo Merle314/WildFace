@@ -372,7 +372,7 @@ def parse_arguments(argv):
     # parser.add_argument('--image_size', type=int, help='Number of epochs to run.',
     #     default=(112, 96, 3))
     parser.add_argument('--batch_size', type=int, help='Number of images to process in a batch.',
-        default=60)
+        default=90)
     parser.add_argument('--epoch_size', type=int, help='Number of batches per epoch.',
         default=1000)
     parser.add_argument('--embedding_size', type=int, help='Dimensionality of the embedding.',
