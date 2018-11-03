@@ -354,8 +354,8 @@ def parse_arguments(argv):
         default='/media/lab225/Documents/merle/faceDataSet/Models')
     parser.add_argument('--gpu_memory_fraction', type=float, help='Upper bound on the amount of GPU memory that will be used by the process.',
         default=1.0)
-    parser.add_argument('--pretrained_model', type=str, help='Load a pretrained model before training starts.',
-        default='/media/lab225/Documents/merle/faceDataSet/Models/20181007-144210/model-20181007-144210.ckpt-79000')
+    parser.add_argument('--pretrained_model', type=str, help='Load a pretrained model before training starts.')
+        # default='/media/lab225/Documents/merle/faceDataSet/Models/20181007-144210/model-20181007-144210.ckpt-79000')
         # default='/media/lab225/Documents/merle/faceDataSet/Models/20181027-170254/model-20181027-170254.ckpt-29000')
         # default='/media/lab225/Documents/merle/faceDataSet/Models/20180402-114759/model-20180402-114759.ckpt-275')
         # default='/media/lab225/Documents/merle/faceDataSet/Models/20180904-220157/model-20180904-220157.ckpt-40000')
@@ -366,13 +366,13 @@ def parse_arguments(argv):
         default='/media/lab225/Document2/merle/faceDataset/vggface2_align_112x96_tfrecord/*.tfrecord')
         # default='/media/lab225/Document2/merle/faceDataset/ms1m_tfrecords/*.tfrecords')
     parser.add_argument('--model_def', type=str, help='Model definition. Points to a module containing the definition of the inference graph.',
-        default='models.inception_resnet_v1')
+        default='models.resface_mul')
     parser.add_argument('--max_nrof_epochs', type=int, help='Number of epochs to run.',
         default=1000)
     # parser.add_argument('--image_size', type=int, help='Number of epochs to run.',
     #     default=(112, 96, 3))
     parser.add_argument('--batch_size', type=int, help='Number of images to process in a batch.',
-        default=128)
+        default=60)
     parser.add_argument('--epoch_size', type=int, help='Number of batches per epoch.',
         default=1000)
     parser.add_argument('--embedding_size', type=int, help='Dimensionality of the embedding.',
