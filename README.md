@@ -1,2 +1,2 @@
 # WildFace
-Face Recognition in the whild
+Face Recognition in the wild
