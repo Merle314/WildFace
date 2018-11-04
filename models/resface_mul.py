@@ -58,16 +58,16 @@ def resface_pre(lower_input,output_channels,scope=None):
     # net = slim.conv2d(net_3+net, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
     # net = slim.conv2d(net_4+net, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
     flatten = slim.flatten(lower_input)
-    alpha_1 = tf.expand_dims(tf.expand_dims(slim.fully_connected(flatten, 1, activation_fn=None, scope='alpha_1', reuse=False), -1), -1)
-    alpha_2 = tf.expand_dims(tf.expand_dims(slim.fully_connected(flatten, 1, activation_fn=None, scope='alpha_2', reuse=False), -1), -1)
-    alpha_3 = tf.expand_dims(tf.expand_dims(slim.fully_connected(flatten, 1, activation_fn=None, scope='alpha_3', reuse=False), -1), -1)
-    alpha_4 = tf.expand_dims(tf.expand_dims(slim.fully_connected(flatten, 1, activation_fn=None, scope='alpha_4', reuse=False), -1), -1)
+    alpha_1 = tf.expand_dims(tf.expand_dims(slim.fully_connected(flatten, 1, activation_fn=tf.nn.sigmoid, scope='alpha_1', reuse=False), -1), -1)
+    alpha_2 = tf.expand_dims(tf.expand_dims(slim.fully_connected(flatten, 1, activation_fn=tf.nn.sigmoid, scope='alpha_2', reuse=False), -1), -1)
+    alpha_3 = tf.expand_dims(tf.expand_dims(slim.fully_connected(flatten, 1, activation_fn=tf.nn.sigmoid, scope='alpha_3', reuse=False), -1), -1)
+    alpha_4 = tf.expand_dims(tf.expand_dims(slim.fully_connected(flatten, 1, activation_fn=tf.nn.sigmoid, scope='alpha_4', reuse=False), -1), -1)
     net_1 = slim.conv2d(net_1, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
     net_2 = slim.conv2d(net_2, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
     net_3 = slim.conv2d(net_3, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
     net_4 = slim.conv2d(net_4, output_channels,weights_initializer=tf.truncated_normal_initializer(stddev=0.01))
-    # return net_1*alpha_1+net_2*alpha_2+net_3*alpha_3+net_4*alpha_4
-    return net_1+net_2+net_3+net_4
+    return net_1*alpha_1+net_2*alpha_2+net_3*alpha_3+net_4*alpha_4
+    # return net_1+net_2+net_3+net_4
 
 # # Define the convolution block before the resface layer
 # def resface_pre(lower_input,output_channels,scope=None):

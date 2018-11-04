@@ -354,7 +354,8 @@ def parse_arguments(argv):
         default='/media/lab225/Documents/merle/faceDataSet/Models')
     parser.add_argument('--gpu_memory_fraction', type=float, help='Upper bound on the amount of GPU memory that will be used by the process.',
         default=1.0)
-    parser.add_argument('--pretrained_model', type=str, help='Load a pretrained model before training starts.')
+    parser.add_argument('--pretrained_model', type=str, help='Load a pretrained model before training starts.',
+        default='/media/lab225/Documents/merle/faceDataSet/Models/20181103-155025/model-20181103-155025.ckpt-49000')
         # default='/media/lab225/Documents/merle/faceDataSet/Models/20181007-144210/model-20181007-144210.ckpt-79000')
         # default='/media/lab225/Documents/merle/faceDataSet/Models/20181027-170254/model-20181027-170254.ckpt-29000')
         # default='/media/lab225/Documents/merle/faceDataSet/Models/20180402-114759/model-20180402-114759.ckpt-275')
