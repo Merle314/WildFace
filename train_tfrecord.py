@@ -22,7 +22,7 @@ import facenet
 import lfw
 # from AM_softmax import AM_logits_compute
 from loss_func import adaptive_loss, cosSoftmax_loss
-
+os.environ["CUDA_VISIBLE_DEVICES"]="3"
 
 def main(args):
     network = importlib.import_module(args.model_def)
@@ -84,6 +84,7 @@ def main(args):
         # label_batch.set_shape([args.batch_size])
         image_batch = tf.identity(image_batch, 'input')
         label_batch = tf.identity(label_batch, 'label')
+        image_batch.set_shape([None, 112, 96, 3])
 
         print('Total number of classes: %d' % nrof_classes)
         print('Total number of examples: 3000000')
@@ -143,7 +144,7 @@ def main(args):
         tf.train.start_queue_runners(coord=coord, sess=sess)
         with sess.as_default():
             if pretrained_model:
-                exclusions = ['softmax/kernel']
+                exclusions = []
                 except_exclusions = slim.get_variables_to_restore(exclude=exclusions)
                 restore_variables = [v for v in tf.trainable_variables() if v in except_exclusions]
                 saver_load= tf.train.Saver(restore_variables)
@@ -349,22 +350,22 @@ def parse_arguments(argv):
     parser = argparse.ArgumentParser()
     
     parser.add_argument('--logs_base_dir', type=str, help='Directory where to write event logs.',
-        default='/media/lab225/Documents/merle/faceDataSet/Models')
+        default='/data/Merle/Models/WildFace')
     parser.add_argument('--models_base_dir', type=str, help='Directory where to write trained models and checkpoints.',
-        default='/media/lab225/Documents/merle/faceDataSet/Models')
+        default='/data/Merle/Models/WildFace')
     parser.add_argument('--gpu_memory_fraction', type=float, help='Upper bound on the amount of GPU memory that will be used by the process.',
         default=1.0)
-    parser.add_argument('--pretrained_model', type=str, help='Load a pretrained model before training starts.',
-        default='/media/lab225/Documents/merle/faceDataSet/Models/20181103-155025/model-20181103-155025.ckpt-49000')
+    parser.add_argument('--pretrained_model', type=str, help='Load a pretrainedmodel before training starts.')
+        # default='/data/Merle/Models/WildFace/20181115-041701/model-20181115-041701.ckpt-21000')
         # default='/media/lab225/Documents/merle/faceDataSet/Models/20181007-144210/model-20181007-144210.ckpt-79000')
         # default='/media/lab225/Documents/merle/faceDataSet/Models/20181027-170254/model-20181027-170254.ckpt-29000')
         # default='/media/lab225/Documents/merle/faceDataSet/Models/20180402-114759/model-20180402-114759.ckpt-275')
         # default='/media/lab225/Documents/merle/faceDataSet/Models/20180904-220157/model-20180904-220157.ckpt-40000')
         # default='/media/lab225/Documents/merle/faceDataSet/Models/20180910-101626/model-20180910-101626.ckpt-11000')
     parser.add_argument('--data_dir', type=str, help='Path to the data directory containing aligned face patches. Multiple directories are separated with colon.',
-        default='/media/lab225/Document2/merle/faceDataset/vggface2_align_112x96')
+        default='/data/Merle/Dataset/vggface2_align_112x96')
     parser.add_argument('--tfrecord_dir', type=str, help='Path to the data directory containing aligned faces converted to tfrecord.',
-        default='/media/lab225/Document2/merle/faceDataset/vggface2_align_112x96_tfrecord/*.tfrecord')
+        default='/data/Merle/Dataset/vggface2_align_112x96_tfrecord/*.tfrecord')
         # default='/media/lab225/Document2/merle/faceDataset/ms1m_tfrecords/*.tfrecords')
     parser.add_argument('--model_def', type=str, help='Model definition. Points to a module containing the definition of the inference graph.',
         default='models.resface_mul')
@@ -373,7 +374,7 @@ def parse_arguments(argv):
     # parser.add_argument('--image_size', type=int, help='Number of epochs to run.',
     #     default=(112, 96, 3))
     parser.add_argument('--batch_size', type=int, help='Number of images to process in a batch.',
-        default=90)
+        default=32)
     parser.add_argument('--epoch_size', type=int, help='Number of batches per epoch.',
         default=1000)
     parser.add_argument('--embedding_size', type=int, help='Dimensionality of the embedding.',
@@ -415,7 +416,7 @@ def parse_arguments(argv):
     parser.add_argument('--lfw_file_ext', type=str, help='The file extension for the LFW dataset.',
         default='jpg', choices=['jpg', 'png'])
     parser.add_argument('--lfw_dir', type=str, help='Path to the data directory containing aligned face patches.',
-        default='/media/lab225/Documents/merle/faceDataSet/lfw/align_112x96')
+        default='/data/Merle/Dataset/LFW/align_112x96')
     parser.add_argument('--lfw_batch_size', type=int, help='Number of images to process in a batch in the LFW test set.',
         default=100)
     parser.add_argument('--lfw_nrof_folds', type=int, help='Number of folds to use for cross validation. Mainly used for testing.',
